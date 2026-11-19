@@ -6,7 +6,12 @@
 </p>
 
 <p align="center">
-  <kbd>HTML5</kbd> <kbd>CSS3</kbd> <kbd>JavaScript</kbd> <kbd>Node.js 22+</kbd> <kbd>Vercel</kbd> <kbd>API Olho Vivo</kbd>
+  🟧 <strong>HTML5</strong> &nbsp;·&nbsp;
+  🟦 <strong>CSS3</strong> &nbsp;·&nbsp;
+  🟨 <strong>JavaScript</strong> &nbsp;·&nbsp;
+  🟩 <strong>Node.js 22+</strong> &nbsp;·&nbsp;
+  ⚪ <strong>Vercel</strong> &nbsp;·&nbsp;
+  🟡 <strong>API Olho Vivo</strong>
 </p>
 
 <p align="center">
@@ -80,12 +85,12 @@ A API Olho Vivo exige **token** e uma **sessão por cookie**. O navegador nunca 
 
 | Camada | Tecnologia | Papel no projeto |
 | --- | --- | --- |
-| Interface | HTML5, CSS3 e JavaScript (ES Modules) | Página única, componentes renderizados no DOM e estado controlado sem framework |
-| Mapas | Leaflet + OpenStreetMap | Mapa interativo com marcadores personalizados e tema escuro |
-| Back-end | Node.js na função serverless da Vercel | Proxy autenticado, sessão em memória e lista de endpoints permitidos |
+| Interface | 🟧 HTML5 · 🟦 CSS3 · 🟨 JavaScript (ES Modules) | Página única, componentes renderizados no DOM e estado controlado sem framework |
+| Mapas | 🟩 Leaflet + OpenStreetMap | Mapa interativo com marcadores personalizados e tema escuro |
+| Back-end | 🟩 Node.js na função serverless da Vercel | Proxy autenticado, sessão em memória e lista de endpoints permitidos |
 | Persistência | `localStorage` | Favoritos, última parada aberta e preferência de atualização automática |
-| Deploy | Vercel | Site estático na raiz e função em `api/`, sem build |
-| Desenvolvimento | Node.js 22.9+ | Servidor local que reproduz o comportamento da produção |
+| Deploy | ⚪ Vercel | Site estático na raiz e função em `api/`, sem build |
+| Desenvolvimento | 🟩 Node.js 22.9+ | Servidor local que reproduz o comportamento da produção |
 
 ### API Olho Vivo
 
