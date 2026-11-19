@@ -55,20 +55,76 @@ Construído do zero com **HTML, CSS e JavaScript puro**, sem framework de front-
 
 ## Arquitetura
 
-```
-┌─────────────────────┐        GET /api/olhovivo?path=...       ┌─────────────────────┐
-│     Navegador       │ ─────────────────────────────────────► │  Função serverless  │
-│  HTML · CSS · JS    │ ◄───────────────────────────────────── │  (Vercel / Node)    │
-└─────────────────────┘          JSON (sem token)              └──────────┬──────────┘
-                                                                          │ login + cookie
-                                                                          ▼
-                                                               ┌─────────────────────┐
-                                                               │   API Olho Vivo     │
-                                                               │   SPTrans v2.1      │
-                                                               └─────────────────────┘
+O app é organizado em três camadas com responsabilidades isoladas: a interface no navegador, uma borda autenticada na Vercel e a API oficial da SPTrans.
+
+### Visão de componentes
+
+```mermaid
+flowchart LR
+  subgraph Navegador
+    UI["Interface<br/>HTML + CSS + JS"]
+    Preferencias["Preferências<br/>localStorage"]
+  end
+
+  subgraph Borda["Função serverless — Vercel"]
+    Proxy["Proxy<br/>/api/olhovivo"]
+    Guarda["Endpoints permitidos"]
+    Sessao["Sessão em memória<br/>cookie · 25 min"]
+  end
+
+  API["API Olho Vivo<br/>SPTrans v2.1"]
+
+  UI -->|"GET /api/olhovivo?path=..."| Proxy
+  Proxy --> Guarda
+  Guarda --> Sessao
+  Sessao -->|"token + cookie"| API
+  API -->|"JSON"| Proxy
+  Proxy -->|"JSON sem credenciais"| UI
+  Preferencias -.->|"favoritos e última parada"| UI
 ```
 
-A API Olho Vivo exige **token** e uma **sessão por cookie**. O navegador nunca fala com a SPTrans diretamente: uma função serverless faz o login, mantém a sessão em memória e repassa as consultas autenticadas.
+### Ciclo de uma consulta
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant N as Navegador
+  participant F as Função serverless
+  participant S as API Olho Vivo
+
+  N->>F: GET /api/olhovivo?path=Previsao/Parada
+  F->>F: valida o endpoint permitido
+  alt Sessão válida
+    F->>S: GET /Previsao/Parada + cookie
+  else Sessão expirada
+    F->>S: POST /Login/Autenticar + token
+    S-->>F: cookie de sessão
+    F->>S: GET /Previsao/Parada + cookie
+  end
+  S-->>F: JSON com as previsões
+  F-->>N: JSON sem credenciais
+```
+
+### Componentes
+
+| Componente | Responsabilidade | Onde vive |
+| --- | --- | --- |
+| Interface | Busca, painel de chegadas, mapa e estados de carregamento | `index.html`, `css/styles.css`, `js/app.js` |
+| Cliente da API | Monta a chamada ao proxy e traduz erros para o usuário | `js/api.js` |
+| Preferências | Favoritos, última parada e atualização automática | `js/storage.js` + `localStorage` |
+| Proxy | Recebe a consulta, valida o caminho e devolve o JSON | `api/olhovivo.js` |
+| Núcleo Olho Vivo | Login, sessão, retentativa em 401/403 e expiração da sessão | `api/_lib/olhovivo.js` |
+| Servidor local | Reproduz o proxy e serve os estáticos em desenvolvimento | `server.js` |
+
+### Limites de confiança
+
+| Fronteira | O que atravessa | Proteção |
+| --- | --- | --- |
+| Navegador → proxy | `path` e parâmetros de consulta | Lista de endpoints permitidos e resposta sem credenciais |
+| Proxy → SPTrans | Token e cookie de sessão | Variável de ambiente e memória do processo |
+| Cliente | Apenas dados públicos | O token nunca chega ao JavaScript do navegador |
+
+A API Olho Vivo exige **token** e uma **sessão por cookie**. O navegador nunca fala com a SPTrans diretamente: a função serverless faz o login, mantém a sessão em memória e repassa as consultas autenticadas.
 
 **Por que o proxy existe:**
 
