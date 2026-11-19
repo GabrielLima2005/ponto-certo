@@ -2,17 +2,13 @@ GLOBAL SOLUTION 2026.2 — APPLICATION DEVELOPMENT (FIAP)
 Projeto: Ponto Certo — mobilidade em São Paulo com a API Olho Vivo (SPTrans)
 
 INTEGRANTES (até 3)
-1. Gabriel — RM 568436 — (descreva o que você desenvolveu)
-2. (nome do integrante 2) — RM (preencher) — (descreva o que ele(a) desenvolveu)
-3. (nome do integrante 3, se houver) — RM (preencher) — (descreva o que ele(a) desenvolveu)
+1. Gabriel Lima da Silva — RM 568436 — (descreva o que você desenvolveu)
+2. Nicolas Araujo de Oliveira — RM 566780 — (descreva o que ele(a) desenvolveu)
 
 DIVISÃO DO TRABALHO
-Sugestão do que pode ser descrito aqui (ajuste conforme a divisão real do grupo):
 - Front-end (HTML/CSS): layout, responsividade, acessibilidade e tema visual.
 - JavaScript: busca de pontos, favoritos, painel de chegadas e atualização automática.
 - Integração e deploy: proxy serverless, login/token da SPTrans, mapa Leaflet e publicação na Vercel.
 - Documentação: README, testes com a API real e roteiro de apresentação.
 
-Observações:
-- Remova as linhas de integrantes que não existirem no grupo.
-- Todos os integrantes devem conseguir explicar qualquer parte do código.
+
