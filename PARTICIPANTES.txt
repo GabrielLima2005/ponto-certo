@@ -1,7 +1,7 @@
 GLOBAL SOLUTION 2026.2 — APPLICATION DEVELOPMENT (FIAP)
 Projeto: Ponto Certo — mobilidade em São Paulo com a API Olho Vivo (SPTrans)
 
-INTEGRANTES (até 3)
+INTEGRANTES 
 1. Gabriel Lima da Silva — RM 568436 
 2. Nicolas Araujo de Oliveira — RM 566780 
 
