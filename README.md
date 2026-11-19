@@ -1,47 +1,92 @@
-# Ponto Certo 🚌
+<p align="center">
+  <img src="assets/banner.svg" alt="Ponto Certo — seu ônibus de São Paulo em tempo real" width="100%" />
+</p>
 
-Aplicativo web feito com **HTML, CSS e JavaScript puro** que usa a **API Olho Vivo da SPTrans** para mostrar, em tempo real, quanto falta para o seu ônibus chegar em qualquer ponto de São Paulo.
+<p align="center">
+  <a href="#funcionalidades">Funcionalidades</a> ·
+  <a href="#arquitetura">Arquitetura</a> ·
+  <a href="#como-rodar-localmente">Como rodar</a> ·
+  <a href="#deploy-na-vercel">Deploy</a> ·
+  <a href="#equipe">Equipe</a>
+</p>
 
-Projeto da Global Solution 2026.2 — FIAP (Application Development) — área de desafio *Citizen Intelligence & Predictive Analytics*.
+<p align="center">
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5" />
+  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3" />
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript" />
+  <img src="https://img.shields.io/badge/Node.js-22%2B-5FA04E?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js 22+" />
+  <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel" />
+  <img src="https://img.shields.io/badge/API-SPTrans%20Olho%20Vivo-facc15?style=for-the-badge&logoColor=black" alt="API SPTrans Olho Vivo" />
+</p>
 
-## O que o app faz
+# Ponto Certo
 
-- **Busca de pontos** por nome ou endereço, com distância opcional a partir da sua localização.
-- **Painel de chegadas** com as linhas do ponto, tempo estimado (calculado a partir da previsão oficial), horário previsto e selo de veículo acessível (♿).
-- **Atualização automática a cada 30 segundos**, com contador visível, botão de atualização manual e pausa quando a aba está em segundo plano.
-- **Pontos favoritos** salvos no navegador (`localStorage`), acessíveis com um toque.
-- **Mapa** com a localização do ponto e a posição dos ônibus de cada linha.
-- **Layout responsivo** (celular e desktop) e tema escuro de alto contraste.
+**Quanto falta para o ônibus chegar?** O Ponto Certo consulta a API Olho Vivo da SPTrans e mostra, em tempo real, as próximas chegadas em qualquer ponto de São Paulo — com mapa dos veículos, favoritos e atualização automática.
 
-## Como funciona
+Projeto acadêmico da **Global Solution 2026.2 — FIAP**, curso de Ciência da Computação, na área de desafio **Citizen Intelligence & Predictive Analytics**.
+
+## Funcionalidades
+
+| Recurso | Descrição |
+| --- | --- |
+| Busca de pontos | Pesquisa por nome ou endereço direto na base da SPTrans, com ordenação por distância quando a localização é permitida |
+| Painel de chegadas | Linhas do ponto ordenadas pela próxima chegada, horário previsto e selo de veículo acessível |
+| Atualização automática | Consultas a cada 30 segundos com contador regressivo, atualização manual e pausa quando a aba fica em segundo plano |
+| Favoritos | Pontos salvos no navegador (`localStorage`) para acesso com um clique |
+| Mapa interativo | Localização do ponto e posição dos ônibus de cada linha no mapa (Leaflet + OpenStreetMap) |
+| Responsivo e acessível | Layout para celular e desktop, tema escuro de alto contraste, navegação por teclado e suporte a `prefers-reduced-motion` |
+
+## Telas
+
+| Desktop | Mobile |
+| :---: | :---: |
+| <img src="assets/desktop.png" alt="Painel de chegadas do Ponto Certo" width="640" /> | <img src="assets/mobile.png" alt="Versão mobile do Ponto Certo" width="280" /> |
+
+<p align="center">
+  <img src="assets/mapa.jpg" alt="Mapa com a posição dos ônibus em tempo real" width="760" />
+</p>
+
+## Arquitetura
 
 ```
-Navegador (HTML/CSS/JS)  ──GET /api/olhovivo?path=...──►  Função serverless  ──►  API Olho Vivo
-                                                          (token + cookie)
+┌─────────────────────┐        GET /api/olhovivo?path=...       ┌─────────────────────┐
+│     Navegador       │ ─────────────────────────────────────► │  Função serverless  │
+│  HTML · CSS · JS    │ ◄───────────────────────────────────── │  (Vercel / Node)    │
+└─────────────────────┘          JSON (sem token)              └──────────┬──────────┘
+                                                                          │ login + cookie
+                                                                          ▼
+                                                               ┌─────────────────────┐
+                                                               │   API Olho Vivo     │
+                                                               │   SPTrans v2.1      │
+                                                               └─────────────────────┘
 ```
 
-A API Olho Vivo exige um **token** e uma **sessão por cookie**. Por isso o app não chama a SPTrans direto do navegador: uma pequena função serverless faz o login, guarda o cookie de sessão em memória e repassa as consultas.
+A API Olho Vivo exige **token** e uma **sessão por cookie**. O navegador nunca fala com a SPTrans diretamente: uma função serverless faz o login, mantém a sessão em memória e repassa as consultas autenticadas.
 
-Esse proxy resolve dois problemas:
-
-1. **Segurança** — o token fica apenas nas variáveis de ambiente do servidor, nunca no código entregue ao navegador.
-2. **CORS** — a API da SPTrans não permite chamadas diretas de qualquer origem; o navegador conversa só com a mesma origem do app.
+| Decisão | Motivo |
+| --- | --- |
+| Proxy serverless | Mantém o token fora do código do cliente e resolve o CORS da API da SPTrans |
+| Sessão em cache por 25 minutos | Evita logins repetidos e respeita o limite de sessões da API |
+| Lista de endpoints permitidos | Impede que o proxy seja usado para acessar rotas arbitrárias |
+| Contadores de versão nas requisições | Respostas antigas não sobrescrevem uma busca ou linha selecionada depois |
+| Atualização a cada 30 segundos | Dados frescos sem sobrecarregar a API pública |
+| Sem dependências de runtime | Build instantâneo; apenas Leaflet via CDN |
 
 ### Endpoints utilizados
 
 | Uso no app | Endpoint da API |
 | --- | --- |
-| Buscar pontos por nome/endereço | `GET /Parada/Buscar?termosBusca=` |
+| Buscar pontos por nome ou endereço | `GET /Parada/Buscar?termosBusca=` |
 | Previsão de chegadas do ponto | `GET /Previsao/Parada?codigoParada=` |
 | Posição dos ônibus de uma linha | `GET /Posicao/Linha?codigoLinha=` |
 | Login (somente no servidor) | `POST /Login/Autenticar?token=` |
 
-## Rodar localmente
+## Como rodar localmente
 
-Pré-requisitos: **Node.js 22.9 ou superior** e um **token da SPTrans**.
+**Pré-requisitos:** Node.js 22.9 ou superior e um token da SPTrans.
 
-1. Crie sua conta na [área de desenvolvedores da SPTrans](https://www.sptrans.com.br/desenvolvedores/), abra **Meus Aplicativos** e gere um token para um novo aplicativo. A liberação pode não ser imediata.
-2. Copie o arquivo de exemplo e coloque o token:
+1. Gere seu token na [área de desenvolvedores da SPTrans](https://www.sptrans.com.br/desenvolvedores/) em **Meus Aplicativos**. A liberação pode não ser imediata.
+2. Crie o arquivo de ambiente:
 
    ```bash
    cp .env.example .env
@@ -51,7 +96,7 @@ Pré-requisitos: **Node.js 22.9 ou superior** e um **token da SPTrans**.
    OLHO_VIVO_TOKEN=cole_seu_token_aqui
    ```
 
-3. Inicie o servidor (o projeto não tem dependências para instalar):
+3. Inicie o servidor — não há dependências para instalar:
 
    ```bash
    npm run dev
@@ -59,11 +104,11 @@ Pré-requisitos: **Node.js 22.9 ou superior** e um **token da SPTrans**.
 
 4. Abra <http://localhost:3000>.
 
-> O servidor local (`server.js`) entrega os arquivos estáticos e responde `/api/olhovivo` com a mesma lógica da função serverless da Vercel.
+O `server.js` entrega os arquivos estáticos e responde `/api/olhovivo` com a mesma lógica da função da Vercel. Para usar outra porta: `PORT=3100 npm run dev` (no PowerShell: `$env:PORT=3100; npm run dev`).
 
-## Publicar no Vercel
+## Deploy na Vercel
 
-1. Crie um repositório no GitHub e envie o projeto:
+1. Envie o projeto para um repositório no GitHub:
 
    ```bash
    git init
@@ -74,36 +119,28 @@ Pré-requisitos: **Node.js 22.9 ou superior** e um **token da SPTrans**.
    git push -u origin main
    ```
 
-2. Entre em [vercel.com](https://vercel.com) e faça **Sign Up com GitHub**.
-3. Clique em **Add New → Project** e importe o repositório.
-4. Em **Environment Variables**, adicione `OLHO_VIVO_TOKEN` com o seu token (marque Production, Preview e Development).
-5. Clique em **Deploy** e aguarde cerca de um minuto.
-6. Abra a URL `https://seu-projeto.vercel.app` e confira.
+2. Em [vercel.com](https://vercel.com), use **Add New → Project** e importe o repositório.
+3. Framework Preset: **Other**. Build Command e Output Directory ficam vazios.
+4. Em **Environment Variables**, adicione `OLHO_VIVO_TOKEN` com o seu token.
+5. Clique em **Deploy** e abra a URL `https://seu-projeto.vercel.app`.
 
-O Vercel detecta o site estático na raiz e a função em `api/`. Não é necessário build. Se trocar o token, atualize a variável e faça **Redeploy**.
-
-> Nunca envie o arquivo `.env` para o GitHub — ele já está no `.gitignore`.
+A Vercel detecta o site estático na raiz e a função em `api/`. Ao trocar o token, atualize a variável e faça **Redeploy**. O arquivo `.env` nunca deve ir para o repositório — ele já está no `.gitignore`.
 
 ## Estrutura do projeto
 
 ```
 index.html              Página única do app
-css/styles.css          Tema escuro, layout responsivo
-js/app.js               Estado da aplicação, painel, busca, mapa e atualização automática
+css/styles.css          Tema escuro e layout responsivo
+js/app.js               Estado, painel, busca, mapa e atualização automática
 js/api.js               Chamadas ao proxy /api/olhovivo
 js/storage.js           Favoritos e preferências no localStorage
-api/olhovivo.js         Função serverless da Vercel (proxy)
-api/_lib/olhovivo.js    Login, cookie de sessão e consultas à API da SPTrans
+api/olhovivo.js         Função serverless (proxy)
+api/_lib/olhovivo.js    Login, sessão e consultas à API da SPTrans
 server.js               Servidor local de desenvolvimento
+assets/                 Banner e capturas de tela
 .env.example            Modelo da variável de ambiente
-PARTICIPANTES.txt       Integrantes do grupo e divisão do trabalho
+PARTICIPANTES.txt       Integrantes e divisão do trabalho
 ```
-
-## Dados e créditos
-
-- Dados de transporte: [SPTrans — API Olho Vivo](https://www.sptrans.com.br/desenvolvedores/).
-- Mapas: [OpenStreetMap](https://www.openstreetmap.org/copyright).
-- Biblioteca de mapas: [Leaflet](https://leafletjs.com/).
 
 ## Limitações
 
@@ -111,6 +148,14 @@ PARTICIPANTES.txt       Integrantes do grupo e divisão do trabalho
 - A atualização automática é de 30 segundos para não sobrecarregar a API pública.
 - Os favoritos ficam apenas no navegador — não há cadastro de usuários.
 
-## Integrantes
+## Equipe
 
-Veja o arquivo [`PARTICIPANTES.txt`](PARTICIPANTES.txt) com o nome dos integrantes e a divisão do trabalho.
+Os integrantes e a divisão do trabalho estão em [`PARTICIPANTES.txt`](PARTICIPANTES.txt).
+
+## Créditos
+
+- Dados de transporte: [SPTrans — API Olho Vivo](https://www.sptrans.com.br/desenvolvedores/)
+- Mapas: [OpenStreetMap](https://www.openstreetmap.org/copyright)
+- Biblioteca de mapas: [Leaflet](https://leafletjs.com/)
+
+Projeto acadêmico desenvolvido para a Global Solution 2026.2 da FIAP.
