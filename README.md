@@ -1,38 +1,24 @@
-<h1 align="center">Ponto Certo</h1>
+<h1 align="center">🚌 Ponto Certo</h1>
+
+<h3 align="center">Chegadas de ônibus em São Paulo com a API Olho Vivo da SPTrans</h3>
 
 <p align="center">
-  <strong>Seu ônibus de São Paulo, em tempo real.</strong><br />
-  Busque um ponto, compare as próximas chegadas e acompanhe os veículos no mapa com dados oficiais da SPTrans.
+  <img src="https://img.shields.io/badge/HTML5-estrutura-E34F26?style=flat&logo=html5&logoColor=white" alt="HTML5" />
+  <img src="https://img.shields.io/badge/CSS3-estilo-1572B6?style=flat&logo=css3&logoColor=white" alt="CSS3" />
+  <img src="https://img.shields.io/badge/JavaScript-ES%20Modules-F7DF1E?style=flat&logo=javascript&logoColor=black" alt="JavaScript" />
+  <img src="https://img.shields.io/badge/Node.js-22%2B-5FA04E?style=flat&logo=nodedotjs&logoColor=white" alt="Node.js 22+" />
+  <img src="https://img.shields.io/badge/Vercel-deploy-000000?style=flat&logo=vercel&logoColor=white" alt="Vercel" />
+  <img src="https://img.shields.io/badge/dados-SPTrans%20Olho%20Vivo-16a34a?style=flat" alt="Dados SPTrans Olho Vivo" />
+  <img src="https://img.shields.io/badge/atualiza%C3%A7%C3%A3o-30%20s-2563eb?style=flat" alt="Atualização a cada 30 segundos" />
 </p>
 
 <p align="center">
-  🟧 <strong>HTML5</strong> &nbsp;·&nbsp;
-  🟦 <strong>CSS3</strong> &nbsp;·&nbsp;
-  🟨 <strong>JavaScript</strong> &nbsp;·&nbsp;
-  🟩 <strong>Node.js 22+</strong> &nbsp;·&nbsp;
-  ⚪ <strong>Vercel</strong> &nbsp;·&nbsp;
-  🟡 <strong>API Olho Vivo</strong>
-</p>
-
-<p align="center">
-  <a href="#visão-geral">Visão geral</a> ·
-  <a href="#funcionalidades">Funcionalidades</a> ·
-  <a href="#arquitetura">Arquitetura</a> ·
-  <a href="#como-rodar-localmente">Rodar localmente</a> ·
-  <a href="#deploy-na-vercel">Deploy</a> ·
-  <a href="#equipe">Equipe</a>
+  Global Solution 2026.2 · Application Development · FIAP
 </p>
 
 ---
 
-| Projeto | Interface | Dependências | Atualização | Dados |
-| :---: | :---: | :---: | :---: | :---: |
-| Funcional | 1 página, sem build | Nenhuma instalada | 30 segundos | SPTrans em tempo real |
-
 ## Visão geral
-
-> **Global Solution 2026.2 — FIAP**  
-> Application Development · Citizen Intelligence & Predictive Analytics
 
 Em São Paulo, quem depende de ônibus conhece a cena: chegar ao ponto e não saber se o próximo veículo vem em dois minutos ou em meia hora. O **Ponto Certo** transforma os dados abertos da SPTrans em uma resposta direta — quanto falta, qual linha, de onde ela vem e onde o ônibus está agora.
 
@@ -94,12 +80,12 @@ A API Olho Vivo exige **token** e uma **sessão por cookie**. O navegador nunca 
 
 | Camada | Tecnologia | Papel no projeto |
 | --- | --- | --- |
-| Interface | 🟧 HTML5 · 🟦 CSS3 · 🟨 JavaScript (ES Modules) | Página única, componentes renderizados no DOM e estado controlado sem framework |
-| Mapas | 🟩 Leaflet + OpenStreetMap | Mapa interativo com marcadores personalizados e tema escuro |
-| Back-end | 🟩 Node.js na função serverless da Vercel | Proxy autenticado, sessão em memória e lista de endpoints permitidos |
+| Interface | HTML5 · CSS3 · JavaScript (ES Modules) | Página única, componentes renderizados no DOM e estado controlado sem framework |
+| Mapas | Leaflet + OpenStreetMap | Mapa interativo com marcadores personalizados e tema escuro |
+| Back-end | Node.js na função serverless da Vercel | Proxy autenticado, sessão em memória e lista de endpoints permitidos |
 | Persistência | `localStorage` | Favoritos, última parada aberta e preferência de atualização automática |
-| Deploy | ⚪ Vercel | Site estático na raiz e função em `api/`, sem build |
-| Desenvolvimento | 🟩 Node.js 22.9+ | Servidor local que reproduz o comportamento de produção |
+| Deploy | Vercel | Site estático na raiz e função em `api/`, sem build |
+| Desenvolvimento | Node.js 22.9+ | Servidor local que reproduz o comportamento de produção |
 
 ### API Olho Vivo
 
