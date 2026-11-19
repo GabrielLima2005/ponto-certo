@@ -1,0 +1,13 @@
+{
+  "name": "ponto-certo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Painel de chegadas de ônibus de São Paulo usando a API Olho Vivo da SPTrans.",
+  "scripts": {
+    "dev": "node --env-file-if-exists=.env server.js"
+  },
+  "engines": {
+    "node": ">=22.9"
+  }
+}
